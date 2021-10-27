@@ -1,0 +1,40 @@
+AccountOverview.app
+
+<aura:application>
+    <c:Accountlist />
+</aura:application>
+
+Accountlist.cmp
+<aura:component controller="AccountListAuraController">
+<aura:attribute name="accounts" type="Account[]"/>
+<aura:handler name="init" value="{!this} action="{!c.doInit}"/>
+<aura:iteration items="{!v.accounts}" var="acc">
+<p>{!acc}</p>
+</aura:iteration>
+
+
+
+
+AccountListController.js
+({
+   doInit:function(component){
+    var action = component.get("c.getAccounts");
+    $A.log(response);
+    if(state==="SUCCESS"){
+        component.set("v.accounts",response.getReturnValue());
+       }
+     });   
+      $A.enqueueAction(action);
+
+})
+
+
+AccountListAuraController.apxc
+
+public with sharing class AccountListAuraController{
+    @AuraEnabled
+    public static List<Account> getAccounts(){
+       return [SELECT Id,Name,description,Website,rating,industry 
+                                            FROM Account LIMIT 10];
+}
+}
